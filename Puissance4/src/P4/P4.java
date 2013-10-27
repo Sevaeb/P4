@@ -2,6 +2,8 @@ package P4;
 
 import javax.swing.JFrame;
 
+// https://github.com/Sevaeb/P4.git
+
 public class P4 {
 
 	public static void main(String[] args) {
@@ -11,8 +13,9 @@ public class P4 {
     	fen.setLocationRelativeTo(null);
     	fen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     	
-        Game Partie1 = new Game();
-        fen.setContentPane(Partie1);
+        Game Partie = new Game();
+        Partie.run();
+        fen.setContentPane(Partie);
         fen.setVisible(true);
 
 	}

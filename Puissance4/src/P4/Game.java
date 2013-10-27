@@ -14,8 +14,6 @@ public class Game extends JPanel {
 	
 	public Game(){
 		initialise();
-		affiche();
-
 	}
 	public void initialise(){
 		this.grille = new char[8][7];
@@ -84,7 +82,18 @@ public class Game extends JPanel {
     			}
     		}
     	}
-    	
-    	
     }
+	public void run(){
+		affiche();
+		try {
+			Thread.sleep(5000);
+			} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			}
+		
+		grille[5][6] = 'J';
+		affiche();
+		
+	}
 }
