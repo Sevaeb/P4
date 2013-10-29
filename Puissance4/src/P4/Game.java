@@ -3,7 +3,6 @@ package P4;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Scanner;
-
 import javax.swing.JPanel;
 
 public class Game extends JPanel {
@@ -18,7 +17,6 @@ public class Game extends JPanel {
 	private static final char ROUGE = 'R';
 	private static final char VIDE = 'O';
 	private Scanner colonne;
-	//private Scanner couleurJeton;
 	
 	int i,j,c, numeroTour;
 	
@@ -102,14 +100,6 @@ public class Game extends JPanel {
 			System.out.println("Veuillez redonner un numéro de colonne entre 1 et 7 :");
 			num = colonne.nextInt();
 		}
-		/*couleurJeton = new Scanner(System.in);
-		System.out.println("Veuillez indiquer la couleur de votre jeton (J pour jaune, R pour rouge) :");
-		char couleurJouee = couleurJeton.nextLine().charAt(0);
-		while(couleurJouee != JAUNE && couleurJouee != ROUGE){
-			System.out.println("La couleur donnée n'est pas bonne.");
-			System.out.println("Veuillez indiquer la couleur de votre jeton (J pour jaune, R pour rouge) :");
-			couleurJouee = couleurJeton.nextLine().charAt(0);
-		}*/
 		if(this.grille[num-1][0] == VIDE){
 			while(ligneJeu<6 && this.grille[num-1][ligneJeu] == VIDE){
 				ligneJeu++;
