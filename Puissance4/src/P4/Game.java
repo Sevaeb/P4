@@ -11,6 +11,7 @@ public class Game extends JPanel {
 	public int[] numColonne;
 	public char[][] grille;
 	public int[] nombreAligne;
+	public char[] jeton;
 	public static final int TAILLE_JETON = 75;
 	private static final int NOMBRE_TOUR = 42;
 	private static final char JAUNE = 'J';
@@ -18,7 +19,7 @@ public class Game extends JPanel {
 	private static final char VIDE = 'O';
 	private Scanner colonne;
 	
-	int i,j,c, numeroTour;
+	int i,j,c, numeroTour, jouee;
 	
 	
 	public Game(){
@@ -27,6 +28,7 @@ public class Game extends JPanel {
 	public void initialise(){
 		this.grille = new char[7][6];
 		this.numColonne = new int[7];
+		this.jeton = new char[2];
 		int l = 1;
 		for(c=0;c<7;c++){
 			numColonne[c] = l;
@@ -38,6 +40,8 @@ public class Game extends JPanel {
 				this.grille[i][j] = VIDE;
 			}
 		}
+		this.jeton[0] = ROUGE;
+		this.jeton[1] = JAUNE;
 	}
 	public void affiche(){
 		System.out.println();
@@ -55,7 +59,7 @@ public class Game extends JPanel {
 	public void paintComponent(Graphics g)
     {
     	g.setColor(Color.white);
-    	g.fillRect(0, 0, 550, 525);
+    	g.fillRect(0, 0, 660, 525);
     	
     	for(c=0;c<7;c++){
 			String colonne = "" + this.numColonne[c];
@@ -80,6 +84,18 @@ public class Game extends JPanel {
     			}
     		}
     	}
+    	jouee = numeroTour %2;
+    	switch (this.jeton[jouee]){
+		case ROUGE :
+			g.setColor(Color.red);
+	    	g.fillOval(560, 200, TAILLE_JETON, TAILLE_JETON);
+	    	break;
+		case JAUNE :
+			g.setColor(Color.yellow);
+	    	g.fillOval(560, 200, TAILLE_JETON, TAILLE_JETON);
+	    	break;
+		}
+
     }
 	public void jouer(){
 		char couleurJouee;
@@ -87,6 +103,7 @@ public class Game extends JPanel {
 		if ((numeroTour %2) == 0){
 			couleurJouee = ROUGE;
 			System.out.println("Au tour de la couleur ROUGE");
+			
 		}
 		else{
 			couleurJouee = JAUNE;
