@@ -36,6 +36,7 @@ public class Game extends JPanel implements MouseListener{
 	public Game(){
 		addMouseListener(this);
 		initialise();
+		numeroTour = 0;
 	}
 	public void initialise(){
 		this.grille = new char[7][6];
@@ -145,6 +146,7 @@ public class Game extends JPanel implements MouseListener{
 			System.out.println("Veuillez redonner un numéro de colonne entre 1 et 7 :");
 			numColonneJouee = colonne.nextInt();
 		}*/
+		System.out.println(numColonneJouee);
 		if(this.grille[numColonneJouee-1][0] == VIDE){
 			while(ligneJeu<6 && this.grille[numColonneJouee-1][ligneJeu] == VIDE){
 				ligneJeu++;
@@ -246,19 +248,16 @@ public class Game extends JPanel implements MouseListener{
 	}
 	public void run()
 	{
-		this.grille[0][5]=ROUGE;
-		this.grille[1][5]=ROUGE;
-		this.grille[2][5]=ROUGE;
-		numeroTour = 0;
 		affiche();
 		while( numeroTour <= NOMBRE_TOUR){
-			while (clic){
+			while (this.clic == true){
 			}
 			/*try{
 				Thread.sleep(500);
 			} catch (InterruptedException e){
 				e.printStackTrace();
 			}*/
+			
 			jouer();
 			affiche();
 			repaint();
@@ -268,34 +267,43 @@ public class Game extends JPanel implements MouseListener{
 	}
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		System.out.print("C'est cliqué" + arg0.getPoint().getX() + "      ");
+		System.out.println("C'est cliqué" + arg0.getPoint().getX() + "      ");
+		this.clic = false;
+		System.out.println(this.clic);
 		switch((int)(arg0.getPoint().getX())/75){
 		case 0 :
 			numColonneJouee = 0;
+			System.out.println(numColonneJouee);
 			break;
 		case 1 :
 			numColonneJouee = 1;
+			System.out.println(numColonneJouee);
 			break;
 		case 2 :
 			numColonneJouee = 2;
+			System.out.println(numColonneJouee);
 			break;
 		case 3 :
 			numColonneJouee = 3;
+			System.out.println(numColonneJouee);
 			break;
 		case 4 :
 			numColonneJouee = 4;
+			System.out.println(numColonneJouee);
 			break;
 		case 5 :
 			numColonneJouee = 5;
+			System.out.println(numColonneJouee);
 			break;
 		case 6 :
 			numColonneJouee = 6;
+			System.out.println(numColonneJouee);
 			break;
 		default :
 				
 		}
-		clic = false;
-		System.out.println(numColonneJouee);
+		
+		
 	}
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
