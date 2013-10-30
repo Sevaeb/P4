@@ -9,7 +9,7 @@ public class P4 {
 	public static void main(String[] args) {
 		JFrame fen = new JFrame();
     	fen.setTitle("Puissance 4");
-    	fen.setSize(660, 525);
+    	fen.setSize(660, 600);
     	fen.setLocationRelativeTo(null);
     	fen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     	

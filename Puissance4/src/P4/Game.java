@@ -5,13 +5,12 @@ import java.awt.Graphics;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.font.TextAttribute;
 import java.text.AttributedString;
-import java.util.Scanner;
-
 import javax.swing.JPanel;
 
-public class Game extends JPanel implements MouseListener{
+public class Game extends JPanel implements MouseListener, MouseMotionListener{
 	
 	private static final long serialVersionUID = 1L;
 	public int[] numColonne;
@@ -27,14 +26,15 @@ public class Game extends JPanel implements MouseListener{
 	private boolean victoireRouge = false;
 	private boolean victoireJaune = false;
 	private boolean clic = true;
-	private Scanner colonne;
 	
 	int i,j,c, numeroTour, jouee;
 	int numColonneJouee = 1;
+	int posSouris;
 	
 	
 	public Game(){
 		addMouseListener(this);
+		addMouseMotionListener(this);
 		initialise();
 		numeroTour = 0;
 	}
@@ -75,7 +75,7 @@ public class Game extends JPanel implements MouseListener{
 	public void paintComponent(Graphics g)
     {
     	g.setColor(Color.white);
-    	g.fillRect(0, 0, 660, 525);
+    	g.fillRect(0, 0, 660, 600);
     	
     	for(c=0;c<7;c++){
 			String colonne = "" + this.numColonne[c];
@@ -87,15 +87,15 @@ public class Game extends JPanel implements MouseListener{
     			switch (this.grille[i][j]){
     			case VIDE :
     				g.setColor(Color.blue);
-    		    	g.fillOval(i*TAILLE_JETON, j*TAILLE_JETON +30, TAILLE_JETON, TAILLE_JETON);
+    		    	g.fillOval(i*TAILLE_JETON, (j+1)*TAILLE_JETON +30, TAILLE_JETON, TAILLE_JETON);
     		    	break;
     			case ROUGE :
     				g.setColor(Color.red);
-    		    	g.fillOval(i*TAILLE_JETON, j*TAILLE_JETON +30, TAILLE_JETON, TAILLE_JETON);
+    		    	g.fillOval(i*TAILLE_JETON, (j+1)*TAILLE_JETON +30, TAILLE_JETON, TAILLE_JETON);
     		    	break;
     			case JAUNE :
     				g.setColor(Color.yellow);
-    		    	g.fillOval(i*TAILLE_JETON, j*TAILLE_JETON +30, TAILLE_JETON, TAILLE_JETON);
+    		    	g.fillOval(i*TAILLE_JETON, (j+1)*TAILLE_JETON +30, TAILLE_JETON, TAILLE_JETON);
     		    	break;
     			}
     		}
@@ -105,10 +105,12 @@ public class Game extends JPanel implements MouseListener{
 		case ROUGE :
 			g.setColor(Color.red);
 	    	g.fillOval(560, 200, TAILLE_JETON, TAILLE_JETON);
+	    	g.fillOval(posSouris, 20, TAILLE_JETON, TAILLE_JETON);
 	    	break;
 		case JAUNE :
 			g.setColor(Color.yellow);
 	    	g.fillOval(560, 200, TAILLE_JETON, TAILLE_JETON);
+	    	g.fillOval(posSouris, 20, TAILLE_JETON, TAILLE_JETON);
 	    	break;
 		}
     	if(victoireRouge){
@@ -138,15 +140,6 @@ public class Game extends JPanel implements MouseListener{
 			couleurJouee = JAUNE;
 			System.out.println("Au tour de la couleur JAUNE");
 		}
-		/*colonne = new Scanner(System.in);
-		System.out.println("Veuillez saisir le numéro de colonne dans laquelle vous voulez jouer :");
-		numColonneJouee = colonne.nextInt();
-		while (numColonneJouee < 1 || numColonneJouee > 7){
-			System.out.println("Vous avez saisi : " + numColonneJouee);
-			System.out.println("Veuillez redonner un numéro de colonne entre 1 et 7 :");
-			numColonneJouee = colonne.nextInt();
-		}*/
-		System.out.println(numColonneJouee);
 		if(this.grille[numColonneJouee-1][0] == VIDE){
 			while(ligneJeu<6 && this.grille[numColonneJouee-1][ligneJeu] == VIDE){
 				ligneJeu++;
@@ -250,60 +243,49 @@ public class Game extends JPanel implements MouseListener{
 	{
 		affiche();
 		while( numeroTour <= NOMBRE_TOUR){
-			while (this.clic == true){
+			while (this.clic){
+				try{
+					Thread.sleep(500);
+					} catch (InterruptedException e){
+					e.printStackTrace();
+					}
 			}
-			/*try{
-				Thread.sleep(500);
-			} catch (InterruptedException e){
-				e.printStackTrace();
-			}*/
-			
 			jouer();
 			affiche();
 			repaint();
+			this.clic = true;
 			numeroTour++;
 		}
 		
 	}
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		System.out.println("C'est cliqué" + arg0.getPoint().getX() + "      ");
 		this.clic = false;
-		System.out.println(this.clic);
 		switch((int)(arg0.getPoint().getX())/75){
 		case 0 :
-			numColonneJouee = 0;
-			System.out.println(numColonneJouee);
+			numColonneJouee = 1;
 			break;
 		case 1 :
-			numColonneJouee = 1;
-			System.out.println(numColonneJouee);
+			numColonneJouee = 2;
 			break;
 		case 2 :
-			numColonneJouee = 2;
-			System.out.println(numColonneJouee);
+			numColonneJouee = 3;
 			break;
 		case 3 :
-			numColonneJouee = 3;
-			System.out.println(numColonneJouee);
+			numColonneJouee = 4;
 			break;
 		case 4 :
-			numColonneJouee = 4;
-			System.out.println(numColonneJouee);
+			numColonneJouee = 5;
 			break;
 		case 5 :
-			numColonneJouee = 5;
-			System.out.println(numColonneJouee);
+			numColonneJouee = 6;
 			break;
 		case 6 :
-			numColonneJouee = 6;
-			System.out.println(numColonneJouee);
+			numColonneJouee = 7;
 			break;
 		default :
 				
 		}
-		
-		
 	}
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
@@ -321,4 +303,39 @@ public class Game extends JPanel implements MouseListener{
 	public void mouseReleased(MouseEvent arg0) {
 		
 	}
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		// TODO Auto-generated method stub
+		switch((int)(e.getPoint().getX())/75){
+		case 0 :
+			posSouris = 0;
+			break;
+		case 1 :
+			posSouris = 75;
+			break;
+		case 2 :
+			posSouris = 150;
+			break;
+		case 3 :
+			posSouris = 225;
+			break;
+		case 4 :
+			posSouris = 300;
+			break;
+		case 5 :
+			posSouris = 375;
+			break;
+		case 6 :
+			posSouris = 450;
+			break;
+		default :
+		}
+		repaint();
+	}
 }
+	
