@@ -2,43 +2,58 @@ package P4;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Font;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.font.TextAttribute;
+import java.text.AttributedString;
 import java.util.Scanner;
+
 import javax.swing.JPanel;
 
-public class Game extends JPanel {
+public class Game extends JPanel implements MouseListener{
 	
 	private static final long serialVersionUID = 1L;
 	public int[] numColonne;
 	public char[][] grille;
 	public int[] nombreAligne;
 	public char[] jeton;
-	public static final int TAILLE_JETON = 75;
+	public char[] jeu;
+	private static final int TAILLE_JETON = 75;
 	private static final int NOMBRE_TOUR = 42;
 	private static final char JAUNE = 'J';
 	private static final char ROUGE = 'R';
 	private static final char VIDE = 'O';
+	private boolean victoireRouge = false;
+	private boolean victoireJaune = false;
+	private boolean clic = true;
 	private Scanner colonne;
 	
 	int i,j,c, numeroTour, jouee;
+	int numColonneJouee = 1;
 	
 	
 	public Game(){
+		addMouseListener(this);
 		initialise();
 	}
 	public void initialise(){
 		this.grille = new char[7][6];
 		this.numColonne = new int[7];
 		this.jeton = new char[2];
+		this.jeu = new char[7];
 		int l = 1;
 		for(c=0;c<7;c++){
 			numColonne[c] = l;
 			l++;
 		}
-		
 		for(i=0;i<7;i++){
 			for(j=0;j<6;j++){
 				this.grille[i][j] = VIDE;
 			}
+		}
+		for(c=0;c<7; c++){
+			this.jeu[c] = ' ';
 		}
 		this.jeton[0] = ROUGE;
 		this.jeton[1] = JAUNE;
@@ -95,7 +110,20 @@ public class Game extends JPanel {
 	    	g.fillOval(560, 200, TAILLE_JETON, TAILLE_JETON);
 	    	break;
 		}
-
+    	if(victoireRouge){
+    		g.setColor(Color.red);
+    	    Font font1 = new Font("Book Antiqua", Font.PLAIN, 30);
+    	    AttributedString attributedString = new AttributedString("La couleur ROUGE l'emporte !!!");
+    	    attributedString.addAttribute(TextAttribute.FONT, font1);
+    	    g.drawString(attributedString.getIterator(), 90, 90);
+    	}
+    	if(victoireJaune){
+    		g.setColor(Color.yellow);
+    	    Font font1 = new Font("Book Antiqua", Font.PLAIN, 30);
+    	    AttributedString attributedString = new AttributedString("La couleur JAUNE l'emporte !!!");
+    	    attributedString.addAttribute(TextAttribute.FONT, font1);
+    	    g.drawString(attributedString.getIterator(), 90, 90);
+    	}
     }
 	public void jouer(){
 		char couleurJouee;
@@ -109,34 +137,32 @@ public class Game extends JPanel {
 			couleurJouee = JAUNE;
 			System.out.println("Au tour de la couleur JAUNE");
 		}
-		colonne = new Scanner(System.in);
+		/*colonne = new Scanner(System.in);
 		System.out.println("Veuillez saisir le numéro de colonne dans laquelle vous voulez jouer :");
-		int num = colonne.nextInt();
-		while (num < 1 || num > 7){
-			System.out.println("Vous avez saisi : " + num);
+		numColonneJouee = colonne.nextInt();
+		while (numColonneJouee < 1 || numColonneJouee > 7){
+			System.out.println("Vous avez saisi : " + numColonneJouee);
 			System.out.println("Veuillez redonner un numéro de colonne entre 1 et 7 :");
-			num = colonne.nextInt();
-		}
-		if(this.grille[num-1][0] == VIDE){
-			while(ligneJeu<6 && this.grille[num-1][ligneJeu] == VIDE){
+			numColonneJouee = colonne.nextInt();
+		}*/
+		if(this.grille[numColonneJouee-1][0] == VIDE){
+			while(ligneJeu<6 && this.grille[numColonneJouee-1][ligneJeu] == VIDE){
 				ligneJeu++;
 			}
-			this.grille[num-1][ligneJeu-1] = couleurJouee;
+			this.grille[numColonneJouee-1][ligneJeu-1] = couleurJouee;
+			aligne(couleurJouee, numColonneJouee-1,ligneJeu-1);
 		}
 		else{
 			System.out.println("Le colonne est pleine.");
 			jouer();
 		}
-		aligne(num-1,ligneJeu-1);
 	}
-	public void aligne(int colonne, int ligne){
+	public void aligne(char couleur, int colonne, int ligne){
 		this.nombreAligne = new int[4];
 		this.nombreAligne[0]=1; // nombreAligne sur une colonne
 		this.nombreAligne[1]=1; // nombreAligne sur une ligne
 		this.nombreAligne[2]=1; // nombreAligne sur la diagonale principale
 		this.nombreAligne[3]=1; // nombreAligne sur la seconde diagonale
-		char couleur;
-		couleur = this.grille[colonne][ligne];
 		// Test l'alignement sur une colonne
 		if((ligne+1)<6 && this.grille[colonne][ligne+1] == couleur){
 			nombreAligne[0] = nombreAligne[0] + 1;
@@ -209,29 +235,82 @@ public class Game extends JPanel {
 		if(nombreAligne[0] == 4 || nombreAligne[1] == 4 || nombreAligne[2] == 4 || nombreAligne[3] == 4){
 			if(couleur == ROUGE){
 				System.out.println("La couleur ROUGE l'emporte.");
-				numeroTour = NOMBRE_TOUR;
+				victoireRouge = true;
 			}
 			else{
 				System.out.println("La couleur JAUNE l'emporte.");
-				numeroTour = NOMBRE_TOUR;
+				victoireJaune = true;
 			}
+			numeroTour = NOMBRE_TOUR;
 		}		
 	}
 	public void run()
 	{
+		this.grille[0][5]=ROUGE;
+		this.grille[1][5]=ROUGE;
+		this.grille[2][5]=ROUGE;
 		numeroTour = 0;
 		affiche();
 		while( numeroTour <= NOMBRE_TOUR){
-			try{
-				Thread.sleep(1000);
+			while (clic){
+			}
+			/*try{
+				Thread.sleep(500);
 			} catch (InterruptedException e){
 				e.printStackTrace();
-			}
-		jouer();
-		affiche();
-		repaint();
-		numeroTour++;
+			}*/
+			jouer();
+			affiche();
+			repaint();
+			numeroTour++;
 		}
+		
+	}
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		System.out.print("C'est cliqué" + arg0.getPoint().getX() + "      ");
+		switch((int)(arg0.getPoint().getX())/75){
+		case 0 :
+			numColonneJouee = 0;
+			break;
+		case 1 :
+			numColonneJouee = 1;
+			break;
+		case 2 :
+			numColonneJouee = 2;
+			break;
+		case 3 :
+			numColonneJouee = 3;
+			break;
+		case 4 :
+			numColonneJouee = 4;
+			break;
+		case 5 :
+			numColonneJouee = 5;
+			break;
+		case 6 :
+			numColonneJouee = 6;
+			break;
+		default :
+				
+		}
+		clic = false;
+		System.out.println(numColonneJouee);
+	}
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		
+	}
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		
+	}
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		
+	}
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
 		
 	}
 }
