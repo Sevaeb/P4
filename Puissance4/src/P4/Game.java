@@ -59,19 +59,6 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener{
 		this.jeton[0] = ROUGE;
 		this.jeton[1] = JAUNE;
 	}
-	public void affiche(){
-		System.out.println();
-		for(c=0;c<7;c++){
-			System.out.print(this.numColonne[c]);
-		}
-		System.out.println();
-		for(j=0;j<6;j++){
-			for(i=0;i<7;i++){
-				System.out.print(this.grille[i][j]);
-			}
-			System.out.println();
-		}
-	}
 	public void paintComponent(Graphics g)
     {
     	g.setColor(Color.white);
@@ -101,16 +88,28 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener{
     		}
     	}
     	jouee = numeroTour %2;
-    	switch (this.jeton[jouee]){
+		switch (this.jeton[jouee]){
 		case ROUGE :
 			g.setColor(Color.red);
 	    	g.fillOval(560, 200, TAILLE_JETON, TAILLE_JETON);
-	    	g.fillOval(posSouris, 20, TAILLE_JETON, TAILLE_JETON);
+	    	if(posSouris != 1){
+	    		g.fillOval(posSouris, 20, TAILLE_JETON, TAILLE_JETON);
+	    	}
+	    	else{
+	    		g.setColor(Color.white);
+		    	g.fillOval(20, 20, TAILLE_JETON, TAILLE_JETON);
+	    	}
 	    	break;
 		case JAUNE :
 			g.setColor(Color.yellow);
 	    	g.fillOval(560, 200, TAILLE_JETON, TAILLE_JETON);
-	    	g.fillOval(posSouris, 20, TAILLE_JETON, TAILLE_JETON);
+	    	if(posSouris != 1){
+	    		g.fillOval(posSouris, 20, TAILLE_JETON, TAILLE_JETON);
+	    	}
+	    	else{
+	    		g.setColor(Color.white);
+		    	g.fillOval(20, 20, TAILLE_JETON, TAILLE_JETON);
+	    	}
 	    	break;
 		}
     	if(victoireRouge){
@@ -231,17 +230,17 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener{
 			if(couleur == ROUGE){
 				System.out.println("La couleur ROUGE l'emporte.");
 				victoireRouge = true;
+				numeroTour = NOMBRE_TOUR+1;
 			}
 			else{
 				System.out.println("La couleur JAUNE l'emporte.");
 				victoireJaune = true;
+				numeroTour = NOMBRE_TOUR;
 			}
-			numeroTour = NOMBRE_TOUR;
 		}		
 	}
 	public void run()
 	{
-		affiche();
 		while( numeroTour <= NOMBRE_TOUR){
 			while (this.clic){
 				try{
@@ -251,7 +250,6 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener{
 					}
 			}
 			jouer();
-			affiche();
 			repaint();
 			this.clic = true;
 			numeroTour++;
@@ -284,6 +282,8 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener{
 			numColonneJouee = 7;
 			break;
 		default :
+			this.clic=true;
+			break;
 				
 		}
 	}
@@ -334,6 +334,8 @@ public class Game extends JPanel implements MouseListener, MouseMotionListener{
 			posSouris = 450;
 			break;
 		default :
+			posSouris = 1;
+			break;
 		}
 		repaint();
 	}
